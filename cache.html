@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom Video Player</title>
+    <style>
+        .video-container {
+            width: 800px;
+            margin: 0 auto;
+        }
+        .controls {
+            background: #333;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .progress {
+            flex-grow: 1;
+            height: 5px;
+            background: #666;
+            margin: 0 10px;
+            position: relative;
+        }
+        .progress-filled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #ff0000;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="video">
+            <source src="vrs2i.mp4" type="video/mp4">
+        </video>
+        <div class="controls">
+            <button id="playBtn">Play</button>
+            <div class="progress">
+                <div class="progress-filled" id="progress"></div>
+            </div>
+            <button id="fullscreenBtn">Fullscreen</button>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const playBtn = document.getElementById('playBtn');
+        const progress = document.getElementById('progress');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // Play/Pause toggle
+        playBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playBtn.textContent = 'Pause';
+            } else {
+                video.pause();
+                playBtn.textContent = 'Play';
+            }
+        });
+
+        // Update progress bar
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            progress.style.width = `${percent}%`;
+        });
+
+        // Click on progress bar to seek
+        progress.parentElement.addEventListener('click', (e) => {
+            const newTime = (e.offsetX / progress.parentElement.offsetWidth) * video.duration;
+            video.currentTime = newTime;
+        });
+
+        // Fullscreen
+        fullscreenBtn.addEventListener('click', () => {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
